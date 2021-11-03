@@ -12,19 +12,21 @@ int main()
 {
     int n, m, x, y,s;
     cin >> n >> m;
-    DirectedGraph *ug = new DirectedGraph(n);
+    UndirectedGraph *ug = new UndirectedGraph(n);
     for(int i = 1; i <= m; i++)
     {
         cin >> x >> y;
         ug -> addEdge(x, y, 0);
     }
 
-    stack<int> sorted = ug -> TopologicalSorting();
-    while(!sorted.empty())
-    {
-        cout << sorted.top()<< " ";
-        sorted.pop();
-    }
+    vector<vector<int>> bcc = ug -> biconnectedComponents();
+    cout << bcc.size()<< "\n";
+   for(auto it : bcc)
+   {
+       for(auto itt: it)
+           cout << itt << " ";
+       cout << "\n";
+   }
 //vector<int> sorted = ug ->TopologicalSorting();
 //    for(int i = sorted.size(); i>=1; i--)
 //        cout << sorted[i]<< " ";

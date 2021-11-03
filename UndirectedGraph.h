@@ -6,11 +6,11 @@
 class UndirectedGraph: public Graph{
 private:
     void BiconnectedDFS(int node, int counterID,
-                        vector<int>lowestLink, vector<int>nodeID,
-                        stack<int>nodeStack,vector<vector<int>>&bcc,
+                        vector<int>&lowestLink, vector<int>&nodeID,
+                        stack<int>&nodeStack,vector<vector<int>>&bcc,
                         int father);
     void addBiconnected(stack<int>&nodeStack, vector<vector<int>>&bcc,
-                               int node);
+                               int neighbour, int node);
 public:
     UndirectedGraph(int _nrNodes);
     void addEdge(int node, int neighbour, double cost);

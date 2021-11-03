@@ -1,5 +1,5 @@
 #include "UndirectedGraph.h"
-
+using namespace std;
 UndirectedGraph::UndirectedGraph(int _nrNodes): Graph(_nrNodes){}
 
 void UndirectedGraph::addEdge(int node, int neighbour, double cost)
@@ -12,7 +12,7 @@ UndirectedGraph::~UndirectedGraph() {}
 
 vector<vector<int>> UndirectedGraph::biconnectedComponents()
 {
-    vector<vector<int>>bcc;
+    vector<vector<int>>bcc(this->getNrNodes()+1);
     stack<int> nodeStack;
     vector<bool> onStack(this -> getNrNodes()+1, false);
     vector<int> lowestLink(this -> getNrNodes()+1, -1);
@@ -26,13 +26,14 @@ vector<vector<int>> UndirectedGraph::biconnectedComponents()
                            lowestLink, nodeID,
                            nodeStack, bcc, -1);
         }
+
     return bcc;
 }
 
 void UndirectedGraph::BiconnectedDFS(int node, int counterID,
-                                     vector<int> lowestLink,
-                                     vector<int> nodeID,
-                                     stack<int> nodeStack,
+                                     vector<int> &lowestLink,
+                                     vector<int> &nodeID,
+                                     stack<int> &nodeStack,
                                      vector<vector<int>> &bcc,
                                      int father)
 {
@@ -48,27 +49,29 @@ void UndirectedGraph::BiconnectedDFS(int node, int counterID,
             BiconnectedDFS(neighbour, counterID,
                            lowestLink, nodeID,
                            nodeStack, bcc, node);
+            lowestLink[node] = min(lowestLink[node], lowestLink[neighbour]);
 
-            if (lowestLink[neighbour] >= nodeID[node])
-                addBiconnected(nodeStack, bcc, node);
+            if (lowestLink[neighbour] >= nodeID[node]) //node is an articulation point
+              addBiconnected(nodeStack, bcc, neighbour, node);
         }
         else if (neighbour != father)
-            lowestLink[node] = min(lowestLink[node], lowestLink[neighbour]);
+            lowestLink[node] = min(lowestLink[node], nodeID[neighbour]);
 
 
     }
 }
 void UndirectedGraph::addBiconnected(stack<int> &nodeStack, vector<vector<int>>&bcc,
-                                            int node)
+                                            int neighbour, int node)
 {
     vector<int>component;
-    while (nodeStack.top() != node)
+    while (nodeStack.top() != neighbour)
     {
         component.push_back(nodeStack.top());
         nodeStack.pop();
     }
-    component.push_back(nodeStack.top());
     nodeStack.pop();
+    component.push_back(neighbour);
+    component.push_back(node);
     bcc.push_back(component);
     component.clear();
 }
