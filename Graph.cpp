@@ -6,7 +6,7 @@ using namespace std;
 Graph::Graph(int _nrNodes)
 {
     this -> nrNodes = _nrNodes;
-    this -> edges.resize(this -> nrNodes + 1, vector<int>());
+    this -> edges.resize(this -> nrNodes + 1, vector<pair<int, double>>());
     /*
      * Nodes start at 1, but index starts at 0
      */
@@ -36,10 +36,10 @@ void Graph::DFS(int start, vector<int>& visited)
     visited[start] = 1;
     for(int i = 0; i < edges[start].size(); ++i)
     {
-        int neighbour = edges[start][i];
+        int neighbour = edges[start][i].first; // get neighbour without cost
         if(visited[neighbour] == 0)
         {
-//            visited[neighbour] = 1;
+            visited[neighbour] = 1;
             DFS(neighbour, visited);
         }
     }
@@ -58,14 +58,14 @@ void Graph::printEdges()
   {
       cout << i<< ": ";
       for(auto it: edges[i])
-          cout << it<< " ";
+          cout << it.first<< " ";
       cout << "\n";
   }
 }
 
-void Graph::setEdge(int node, int neighbour)
+void Graph::setEdge(int node, int neighbour, double cost)
 {
-   this ->edges[node].push_back(neighbour);
+   this ->edges[node].push_back({neighbour, cost});
 }
 
 vector<int> Graph::minDistanceBFS(int start)
@@ -82,15 +82,20 @@ vector<int> Graph::minDistanceBFS(int start)
         toBeVisited.pop();
 
         for(auto it: this->edges[x])
-            if(distances[it] == -1)
+            if(distances[it.first] == -1)
             {
-                distances[it] = distances[x] + 1;
-                toBeVisited.push(it);
+                distances[it.first] = distances[x] + 1;
+                toBeVisited.push(it.first);
             }
 
 
     }     //while loop ended
 
     return distances;
+}
+
+vector<pair<int, double>> Graph::getNeighbours(int node)
+{
+    return this -> edges[node];
 }
 
