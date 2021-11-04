@@ -1,4 +1,5 @@
 #include "UndirectedGraph.h"
+#include <algorithm>
 using namespace std;
 UndirectedGraph::UndirectedGraph(int _nrNodes): Graph(_nrNodes){}
 
@@ -51,7 +52,7 @@ void UndirectedGraph::biconnectedDFS(int node, int& counterID,
             lowestLink[node] = min(lowestLink[node], lowestLink[neighbour]);
 
             if (lowestLink[neighbour] >= nodeID[node]) //node is an articulation point
-              addBiconnected(nodeStack, bcc, neighbour, node);
+              addBiconnected(nodeStack, bcc, node, neighbour);
         }
         else if (neighbour != father)
             lowestLink[node] = min(lowestLink[node], nodeID[neighbour]);
@@ -60,7 +61,7 @@ void UndirectedGraph::biconnectedDFS(int node, int& counterID,
     }
 }
 void UndirectedGraph::addBiconnected(stack<int> &nodeStack, vector<vector<int>>&bcc,
-                                            int neighbour, int node)
+                                            int node, int neighbour)
 {
     /*
      * we stop popping at neighbour because between
@@ -129,6 +130,42 @@ void UndirectedGraph::criticalEdgeDFS(int node, int counterID,
         else if (neighbour != father)
             lowestLink[node] = min(lowestLink[node], nodeID[neighbour]);
     }
+}
+
+bool UndirectedGraph::havelHakimi(vector<int> degrees)
+{
+    int loops = 0;
+    while(true)
+    {
+        sort(degrees.begin(), degrees.end(), greater<int>());
+
+        if(degrees[0] == 0)
+            return true;
+
+        if(degrees[0] > degrees.size() - loops)
+            return false;
+
+        for(int i = 1; i <= degrees[0]; ++i)
+            if(--degrees[i] < 0)
+                return false;
+        degrees[0] = 0;
+        loops++;
+    }
+}
+
+string UndirectedGraph::havelHakimiAnswer()
+{
+    int d;
+    vector<int>degrees;
+    for(int i = 0; i < this->getNrNodes(); ++i)
+    {
+        cin >> d;
+        degrees.push_back(d);
+    }
+
+   if(havelHakimi(degrees))
+      return "Yes";
+   return "No";
 }
 
 
