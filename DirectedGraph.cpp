@@ -1,10 +1,10 @@
 #include "DirectedGraph.h"
-using namespace std;
+
 DirectedGraph::DirectedGraph(int _nrNodes): Graph(_nrNodes) {}
 
 void DirectedGraph::addEdge(int node, int neighbour, double cost)
 {
-    this -> setEdge(node, neighbour, cost);
+   this -> setEdge(node, neighbour, cost);
 }
 
 vector<vector<int>> DirectedGraph::getStronglyConnected()
@@ -15,6 +15,7 @@ vector<vector<int>> DirectedGraph::getStronglyConnected()
     vector<int> lowestLink(this -> getNrNodes()+1, -1);
     vector<int> nodeID(this -> getNrNodes()+1, -1);
     int counterID = 0;
+
     for(int node = 1; node <= this -> getNrNodes(); ++node)
         if(nodeID[node] == -1)
             TarjanDFS(node, counterID, nodeStack,
@@ -29,11 +30,11 @@ vector<vector<int>> DirectedGraph::getStronglyConnected()
 }
 
 void DirectedGraph::TarjanDFS(int node, int& counterID,
-                              stack<int>&nodeStack,
+                              stack<int>& nodeStack,
                               vector<bool>& onStack,
-                              vector<vector<int>>&scc,
-                              vector<int> &nodeID,
-                              vector<int>&lowestLink)
+                              vector<vector<int>>& scc,
+                              vector<int>& nodeID,
+                              vector<int>& lowestLink)
 {
     vector<int> component;
     nodeID[node] = counterID;
@@ -41,7 +42,7 @@ void DirectedGraph::TarjanDFS(int node, int& counterID,
     nodeStack.push(node);
     onStack[node] = true;
 
-    for(auto it: this->getNeighbours(node))
+    for(auto &it: this->getNeighbours(node))
     {
         int neighbour = it.first; // node -> first; cost -> second
         if(nodeID[neighbour] == -1)         // if neighbour not visited
@@ -69,16 +70,13 @@ void DirectedGraph::TarjanDFS(int node, int& counterID,
     }
 }
 
-
-DirectedGraph::~DirectedGraph() {}
-
-stack<int> DirectedGraph::TopologicalSorting()
+stack<int> DirectedGraph::topologicalSorting()
 {
     stack<int> sorted;
     vector<bool> visited(this->getNrNodes() + 1, false);
     for(int node = 1; node < visited.size(); ++node)
         if(!visited[node])
-            TopologicalDFS(node, sorted, visited);
+            topologicalDFS(node, sorted, visited);
     /*
      * -> TopologicalDFS() modifies the sorted vector
      * -> the sorted nodes are the nodes' times in descending order
@@ -86,16 +84,41 @@ stack<int> DirectedGraph::TopologicalSorting()
     return sorted;
 }
 
-void DirectedGraph::TopologicalDFS(int node, stack<int>&sorted,
+void DirectedGraph::topologicalDFS(int node, stack<int>&sorted,
                                    vector<bool>&visited)
 {
    visited[node] = true;
-   for(auto it: this->getNeighbours(node))
+   for(auto &it: this->getNeighbours(node))
    {
        int neighbour = it.first;
        if (!visited[neighbour])
-           TopologicalDFS(neighbour, sorted, visited);
+           topologicalDFS(neighbour, sorted, visited);
 
    }
    sorted.push(node);
+}
+
+vector<int> DirectedGraph::minDistanceBFS(int start)
+{
+    vector<int>distances(this->getNrNodes() + 1, -1);
+    distances[start] = 0;
+
+    queue<int>toBeVisited;
+    toBeVisited.push(start);
+
+    while(!toBeVisited.empty())
+    {
+        int x = toBeVisited.front();
+        toBeVisited.pop();
+
+        for(auto &it: this->getNeighbours(x))
+            if(distances[it.first] == -1)
+            {
+                distances[it.first] = distances[x] + 1;
+                toBeVisited.push(it.first);
+            }
+
+    }     //while loop ended
+
+    return distances;
 }

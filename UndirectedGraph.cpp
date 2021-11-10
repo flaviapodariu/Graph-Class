@@ -1,6 +1,5 @@
 #include "UndirectedGraph.h"
-#include <algorithm>
-using namespace std;
+
 UndirectedGraph::UndirectedGraph(int _nrNodes): Graph(_nrNodes){}
 
 void UndirectedGraph::addEdge(int node, int neighbour, double cost)
@@ -9,59 +8,53 @@ void UndirectedGraph::addEdge(int node, int neighbour, double cost)
     this -> setEdge(neighbour, node, cost);
 }
 
-UndirectedGraph::~UndirectedGraph() {}
-
 vector<vector<int>> UndirectedGraph::biconnectedComponents()
 {
-    vector<vector<int>>bcc(this->getNrNodes()+1);
+    vector<vector<int>> bcc;
     stack<int> nodeStack;
     vector<int> lowestLink(this -> getNrNodes()+1, -1);
     vector<int> nodeID(this -> getNrNodes()+1, -1);
-    int counterID = 0;
-    for(int node = 1; node <= this -> getNrNodes(); ++node)
-        if(nodeID[node] == -1)
-        {
-            nodeStack.push(node);
-            biconnectedDFS(node, counterID,
-                           lowestLink, nodeID,
-                           nodeStack, bcc, -1);
-        }
 
+    for(int node = 1; node <= this -> getNrNodes(); node++)
+    {
+        if (nodeID.at(node) == -1)
+            biconnectedDFS(node, 0, lowestLink,
+                           nodeID, nodeStack, bcc);
+    }
     return bcc;
 }
 
-void UndirectedGraph::biconnectedDFS(int node, int& counterID,
-                                     vector<int> &lowestLink,
-                                     vector<int> &nodeID,
-                                     stack<int> &nodeStack,
-                                     vector<vector<int>> &bcc,
-                                     int father)
+void UndirectedGraph::biconnectedDFS(int node, int father,
+                                     vector<int>& lowestLink,
+                                     vector<int>& nodeID,
+                                     stack<int>& nodeStack,
+                                     vector<vector<int>>& bcc)
 {
-    nodeID[node] = counterID;
-    lowestLink[node] = counterID++;
+    nodeID[node] = nodeID[father]+1;
+    lowestLink[node] = nodeID[father]+1;
     nodeStack.push(node);
-    for (auto it: this->getNeighbours(node))
+
+    for (auto &it: this->getNeighbours(node))
     {
         int neighbour = it.first;
-        if (nodeID[neighbour] == -1 && neighbour != father)
-        {
+        if (nodeID[neighbour] != -1 && neighbour != father)
+            lowestLink[node] = min(lowestLink[node], nodeID[neighbour]);
 
-            biconnectedDFS(neighbour, counterID,
+        else if (neighbour != father)
+        {
+            biconnectedDFS(neighbour, node,
                            lowestLink, nodeID,
-                           nodeStack, bcc, node);
+                           nodeStack, bcc);
             lowestLink[node] = min(lowestLink[node], lowestLink[neighbour]);
 
             if (lowestLink[neighbour] >= nodeID[node]) //node is an articulation point
-              addBiconnected(nodeStack, bcc, node, neighbour);
+                addBiconnected(nodeStack, node, neighbour, bcc);
         }
-        else if (neighbour != father)
-            lowestLink[node] = min(lowestLink[node], nodeID[neighbour]);
-
 
     }
 }
-void UndirectedGraph::addBiconnected(stack<int> &nodeStack, vector<vector<int>>&bcc,
-                                            int node, int neighbour)
+void UndirectedGraph::addBiconnected(stack<int>& nodeStack, int node,
+                                     int neighbour, vector<vector<int>>& bcc)
 {
     /*
      * we stop popping at neighbour because between
@@ -81,52 +74,42 @@ void UndirectedGraph::addBiconnected(stack<int> &nodeStack, vector<vector<int>>&
     component.push_back(neighbour);
     component.push_back(node);
     bcc.push_back(component);
-    component.clear();
 }
 
 vector<vector<int>> UndirectedGraph::criticalEdges()
 {
-    vector<vector<int>>critical;
-    stack<int> nodeStack;
-    vector<bool> onStack(this -> getNrNodes()+1, false);
+    vector<vector<int>> critical;
     vector<int> lowestLink(this -> getNrNodes()+1, -1);
     vector<int> nodeID(this -> getNrNodes()+1, -1);
-    int counterID = 0;
-    for(int node = 1; node <= this -> getNrNodes(); ++node)
+    for(int node = 0; node < this -> getNrNodes(); ++node)
         if(nodeID[node] == -1)
         {
-            nodeStack.push(node);
-            criticalEdgeDFS(node, counterID,
-                           lowestLink, nodeID,
-                           nodeStack, critical, -1);
+            criticalEdgeDFS(node, 0, lowestLink, nodeID,critical);
         }
 
     return critical;
 }
 
-void UndirectedGraph::criticalEdgeDFS(int node, int counterID,
-                                      vector<int> &lowestLink,
-                                      vector<int> &nodeID,
-                                      stack<int> &nodeStack,
-                                      vector<vector<int>> &critical, int father)
+void UndirectedGraph::criticalEdgeDFS(int node, int father,
+                                      vector<int>& lowestLink,
+                                      vector<int>& nodeID,
+                                      vector<vector<int>>& critical)
 {
-    nodeID[node] = counterID;
-    lowestLink[node] = counterID++;
-    nodeStack.push(node);
-    for (auto it: this->getNeighbours(node))
+    nodeID[node] = nodeID[father]+1;
+    lowestLink[node] = nodeID[father]+1;
+
+    for (auto &it: this->getNeighbours(node))
     {
         int neighbour = it.first;
         if (nodeID[neighbour] == -1 && neighbour != father)
         {
-            criticalEdgeDFS(neighbour, counterID,
-                            lowestLink, nodeID,
-                            nodeStack, critical, node);
+            criticalEdgeDFS(neighbour, node, lowestLink,
+                            nodeID,critical);
             lowestLink[node] = min(lowestLink[node], lowestLink[neighbour]);
 
             if (lowestLink[neighbour] > nodeID[node]) //node is an articulation point
                 critical.push_back({node, neighbour});
         }
-
         else if (neighbour != father)
             lowestLink[node] = min(lowestLink[node], nodeID[neighbour]);
     }
@@ -137,7 +120,7 @@ bool UndirectedGraph::havelHakimi(vector<int> degrees)
     int loops = 0;
     while(true)
     {
-        sort(degrees.begin(), degrees.end(), greater<int>());
+        sort(degrees.begin(), degrees.end(), greater<>());
 
         if(degrees[0] == 0)
             return true;
@@ -167,7 +150,4 @@ string UndirectedGraph::havelHakimiAnswer()
       return "Yes";
    return "No";
 }
-
-
-
 

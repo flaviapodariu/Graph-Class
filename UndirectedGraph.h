@@ -4,25 +4,27 @@
 #include "Graph.h"
 
 class UndirectedGraph: public Graph{
-private:
-    void biconnectedDFS(int node, int& counterID,
-                        vector<int>&lowestLink, vector<int>&nodeID,
-                        stack<int>&nodeStack,vector<vector<int>>&bcc,
-                        int father);
-    void addBiconnected(stack<int>&nodeStack, vector<vector<int>>&bcc,
-                               int node, int neighbour);
-    void criticalEdgeDFS(int node, int counterID,
-                         vector<int>&lowestLink, vector<int>&nodeID,
-                         stack<int>&nodeStack,vector<vector<int>>&critical,
-                         int father);
-    bool havelHakimi(vector<int>degrees);
 public:
     UndirectedGraph(int _nrNodes);
     void addEdge(int node, int neighbour, double cost);
-    ~UndirectedGraph();
-    vector<vector<int>>biconnectedComponents();
-    vector<vector<int>>criticalEdges();
+    ~UndirectedGraph() = default;
+
+    vector<vector<int>> biconnectedComponents();
+    vector<vector<int>> criticalEdges();
     string havelHakimiAnswer();
+
+private:
+    void biconnectedDFS(int node, int father, vector<int>& lowestLink,
+                        vector<int>& nodeID, stack<int>& nodeStack,
+                        vector<vector<int>>& bcc);
+
+    void addBiconnected(stack<int>& nodeStack, int node, int neighbour,
+                        vector<vector<int>>& bcc);
+
+    void criticalEdgeDFS(int node, int father,vector<int>& lowestLink,
+                         vector<int>& nodeID, vector<vector<int>>& critical);
+
+    bool havelHakimi(vector<int>degrees);
 };
 
 
