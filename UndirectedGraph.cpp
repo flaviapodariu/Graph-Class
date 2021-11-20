@@ -2,7 +2,7 @@
 
 UndirectedGraph::UndirectedGraph(int _nrNodes): Graph(_nrNodes){}
 
-void UndirectedGraph::addEdge(int node, int neighbour, double cost)
+void UndirectedGraph::addEdge(int node, int neighbour, int cost)
 {
     this -> setEdge(node, neighbour, cost);
     this -> setEdge(neighbour, node, cost);
@@ -36,7 +36,7 @@ void UndirectedGraph::biconnectedDFS(int node, int father,
 
     for (auto &it: this->getNeighbours(node))
     {
-        int neighbour = it.first;
+        int neighbour = it.neighbour;
         if (nodeID[neighbour] != -1 && neighbour != father)
             lowestLink[node] = min(lowestLink[node], nodeID[neighbour]);
 
@@ -100,7 +100,7 @@ void UndirectedGraph::criticalEdgeDFS(int node, int father,
 
     for (auto &it: this->getNeighbours(node))
     {
-        int neighbour = it.first;
+        int neighbour = it.neighbour;
         if (nodeID[neighbour] == -1 && neighbour != father)
         {
             criticalEdgeDFS(neighbour, node, lowestLink,
@@ -136,18 +136,4 @@ bool UndirectedGraph::havelHakimi(vector<int> degrees)
     }
 }
 
-string UndirectedGraph::havelHakimiAnswer()
-{
-    int d;
-    vector<int>degrees;
-    for(int i = 0; i < this->getNrNodes(); ++i)
-    {
-        cin >> d;
-        degrees.push_back(d);
-    }
-
-   if(havelHakimi(degrees))
-      return "Yes";
-   return "No";
-}
 

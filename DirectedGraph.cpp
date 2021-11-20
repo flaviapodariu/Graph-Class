@@ -2,7 +2,7 @@
 
 DirectedGraph::DirectedGraph(int _nrNodes): Graph(_nrNodes) {}
 
-void DirectedGraph::addEdge(int node, int neighbour, double cost)
+void DirectedGraph::addEdge(int node, int neighbour, int cost)
 {
    this -> setEdge(node, neighbour, cost);
 }
@@ -44,7 +44,7 @@ void DirectedGraph::TarjanDFS(int node, int& counterID,
 
     for(auto &it: this->getNeighbours(node))
     {
-        int neighbour = it.first; // node -> first; cost -> second
+        int neighbour = it.neighbour; // node -> first; cost -> second
         if(nodeID[neighbour] == -1)         // if neighbour not visited
             TarjanDFS(neighbour, counterID, nodeStack,
                       onStack, scc, nodeID,
@@ -70,9 +70,9 @@ void DirectedGraph::TarjanDFS(int node, int& counterID,
     }
 }
 
-stack<int> DirectedGraph::topologicalSorting()
+vector<int> DirectedGraph::topologicalSorting()
 {
-    stack<int> sorted;
+    vector<int> sorted;
     vector<bool> visited(this->getNrNodes() + 1, false);
     for(int node = 1; node < visited.size(); ++node)
         if(!visited[node])
@@ -84,41 +84,17 @@ stack<int> DirectedGraph::topologicalSorting()
     return sorted;
 }
 
-void DirectedGraph::topologicalDFS(int node, stack<int>&sorted,
+void DirectedGraph::topologicalDFS(int node, vector<int>&sorted,
                                    vector<bool>&visited)
 {
    visited[node] = true;
    for(auto &it: this->getNeighbours(node))
    {
-       int neighbour = it.first;
+       int neighbour = it.neighbour;
        if (!visited[neighbour])
            topologicalDFS(neighbour, sorted, visited);
 
    }
-   sorted.push(node);
+   sorted.push_back(node);
 }
 
-vector<int> DirectedGraph::minDistanceBFS(int start)
-{
-    vector<int>distances(this->getNrNodes() + 1, -1);
-    distances[start] = 0;
-
-    queue<int>toBeVisited;
-    toBeVisited.push(start);
-
-    while(!toBeVisited.empty())
-    {
-        int x = toBeVisited.front();
-        toBeVisited.pop();
-
-        for(auto &it: this->getNeighbours(x))
-            if(distances[it.first] == -1)
-            {
-                distances[it.first] = distances[x] + 1;
-                toBeVisited.push(it.first);
-            }
-
-    }     //while loop ended
-
-    return distances;
-}

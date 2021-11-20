@@ -6,12 +6,12 @@
 class UndirectedGraph: public Graph{
 public:
     UndirectedGraph(int _nrNodes);
-    void addEdge(int node, int neighbour, double cost);
+    void addEdge(int node, int neighbour, int cost);
     ~UndirectedGraph() = default;
 
     vector<vector<int>> biconnectedComponents();
     vector<vector<int>> criticalEdges();
-    string havelHakimiAnswer();
+    bool havelHakimi(vector<int>degrees);
 
 private:
     void biconnectedDFS(int node, int father, vector<int>& lowestLink,
@@ -23,8 +23,6 @@ private:
 
     void criticalEdgeDFS(int node, int father,vector<int>& lowestLink,
                          vector<int>& nodeID, vector<vector<int>>& critical);
-
-    bool havelHakimi(vector<int>degrees);
 };
 
 

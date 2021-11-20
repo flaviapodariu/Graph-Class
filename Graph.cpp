@@ -14,12 +14,15 @@ int Graph::getNrNodes() const
     return this -> nrNodes;
 }
 
-void Graph::setEdge(int node, int neighbour, double cost)
+void Graph::setEdge(int node, int neighbour, int cost)
 {
-    this -> edges[node].push_back({make_pair(neighbour, cost)});
+    struct edge tmp;
+    tmp.neighbour = neighbour;
+    tmp.cost = cost;
+    this -> edges[node].push_back(tmp);
 }
 
-const vector<pair<int, double>>& Graph::getNeighbours(int node)
+const vector<edge>& Graph::getNeighbours(int node)
 {
     return this -> edges[node];
 }
@@ -37,13 +40,73 @@ int Graph::nrConnectedComponents()
     return ans;
 }
 
+vector<int> Graph::minDistanceBFS(int start)
+{
+    vector<int>distances(this->nrNodes + 1, -1);
+    distances[start] = 0;
+
+    queue<int>toBeVisited;
+    toBeVisited.push(start);
+
+    while(!toBeVisited.empty())
+    {
+        int x = toBeVisited.front();
+        toBeVisited.pop();
+
+        for(auto &it: this->edges[x])
+            if(distances[it.neighbour] == -1)
+            {
+                distances[it.neighbour] = distances[x] + 1;
+                toBeVisited.push(it.neighbour);
+            }
+
+    }     //while loop ended
+
+    return distances;
+}
+
+vector<int> Graph::PrimMST(int& costMST)
+{
+    vector<int> parent(this->nrNodes+1, 0);
+    vector<int> minCost(this->nrNodes+1, INT_MAX);
+    vector<bool> inMST(this -> nrNodes+1, false);
+    priority_queue<pair<int, int>,vector<pair<int, int>> ,greater<>>edgePQ;
+    minCost[1] = 0;
+    edgePQ.push(make_pair(0, 1)); //cost has to be first for greater<> to work
+
+    while(!edgePQ.empty())
+    {
+        int currCost = edgePQ.top().first;
+        int node = edgePQ.top().second;
+        edgePQ.pop();
+
+        if(inMST[node])
+            continue;
+
+        inMST[node] = true;
+        costMST += currCost;
+
+        for(auto& it: edges[node])
+        {
+            int neighbour = it.neighbour;
+            int cost = it.cost;
+            if(!inMST[neighbour] && minCost[neighbour] > cost)
+            {
+               minCost[neighbour] = cost;
+               parent[neighbour] = node;
+               edgePQ.push(make_pair(minCost[neighbour], neighbour));
+            }
+        }
+    }
+    return parent;
+}
 
 void Graph::DFS(int start, vector<int>& visited)
 {
     visited[start] = 1;
     for(auto &it: this ->edges[start])
     {
-        int neighbour = it.first; // get neighbour without cost
+        int neighbour = it.neighbour;
         if(visited[neighbour] == 0)
         {
             visited[neighbour] = 1;
@@ -58,10 +121,126 @@ void Graph::printEdges() const
   {
       cout << i<< ": ";
       for(auto &it: edges[i])
-          cout << it.first<< " ";
+          cout << it.neighbour<< " ";
       cout << "\n";
   }
 }
+
+vector<int> Graph::Dijkstra()
+{
+    vector<int> minCost(this->nrNodes+1, INT_MAX);
+    vector<bool> inMST(this -> nrNodes+1, false);
+    priority_queue<pair<int, int>,vector<pair<int, int>> ,greater<>>edgePQ;
+    minCost[1] = 0;
+    edgePQ.push(make_pair(0, 1)); //cost has to be first for greater<> to work
+
+    while(!edgePQ.empty())
+    {
+        int node = edgePQ.top().second;
+        edgePQ.pop();
+
+        if(inMST[node])
+            continue;
+
+        inMST[node] = true;
+
+        for(auto& it: edges[node])
+        {
+            int neighbour = it.neighbour;
+            int cost = it.cost;
+            if(!inMST[neighbour] && minCost[node] + cost < minCost[neighbour])
+            {
+                minCost[neighbour] = minCost[node] + cost;
+                edgePQ.push(make_pair(minCost[neighbour], neighbour));
+            }
+        }
+    }
+    return minCost;
+}
+
+vector<int> Graph::BellmanFord()
+{
+    vector<int> minCost(this->nrNodes+1, INT_MAX);
+    queue<int> activeNodes;
+    vector<bool> inQueue(this ->nrNodes+1, false);
+    vector<int> nodeOptimizations(this->nrNodes+1, 0);
+    minCost[1] = 0;
+    activeNodes.push(1);
+    inQueue[1] = true;
+    nodeOptimizations[1] = 1;
+
+    while(!activeNodes.empty())
+    {
+        int node = activeNodes.front();
+        activeNodes.pop();
+        inQueue[node] = false;
+
+        for(auto& it: this -> edges[node])
+        {
+            int neighbour = it.neighbour;
+            int cost = it.cost;
+            if(minCost[node] + cost < minCost[neighbour])
+            {
+                minCost[neighbour] = minCost[node] + cost;
+                if(!inQueue[neighbour])
+                {
+                    activeNodes.push(neighbour);
+                    inQueue[neighbour] = true;
+                    nodeOptimizations[neighbour]++;
+                }
+                if(nodeOptimizations[neighbour] >= this->nrNodes)
+                    return {-1};
+
+            }
+        }
+    }
+
+    return minCost;
+}
+
+void Graph::disjointSets(int op, int node1, int node2,
+                         vector<bool>& sameGroup, vector<int>& root)
+{
+    if(op == 1)
+        unifyGroups(node1, node2, root);
+    else
+    {
+        int group1 = findGroup(node1, root);
+        int group2 = findGroup(node2, root);
+        sameGroup.push_back(group1 == group2);
+    }
+
+
+}
+
+int Graph::findGroup(int node, vector<int>& root)
+{
+    int temp = node;
+    while(temp != root[temp])
+        temp = root[temp];
+
+    while(node != temp) //temp is root now
+    {
+        int next = root[node];
+        root[node] = temp;
+        node = next;
+    }
+    return temp;
+}
+
+void Graph::unifyGroups(int node1, int node2, vector<int>& root)
+{
+    int root1 = findGroup(node1, root);
+    int root2 = findGroup(node2, root);
+    if(root1 == root2)
+        return; // nodes are in the same group
+    else
+        root[root1] = root2;
+}
+
+
+
+
 
 
 

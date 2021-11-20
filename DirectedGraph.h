@@ -6,12 +6,11 @@
 class DirectedGraph: public Graph {
 public:
     DirectedGraph(int _nrNodes);
-    void addEdge(int node, int neighbour, double cost);
+    void addEdge(int node, int neighbour, int cost);
     ~DirectedGraph() = default;
 
     vector<vector<int>> getStronglyConnected();
-    stack<int> topologicalSorting();
-    vector<int> minDistanceBFS(int start);
+    vector<int> topologicalSorting();
 
 private:
 
@@ -20,7 +19,7 @@ private:
                           vector<vector<int>>& scc,
                           vector<int>& nodeID, vector<int>& lowestLink);
 
-    void topologicalDFS(int node, stack<int>& sorted,
+    void topologicalDFS(int node, vector<int>& sorted,
                         vector<bool>& visited);
 
 };
