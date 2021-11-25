@@ -30,8 +30,8 @@ public:
     int nrConnectedComponents();
     vector<int> minDistanceBFS(int start);
     vector<int> PrimMST(int& costMST);
-    vector<int> Dijkstra();
-    vector<int> BellmanFord();
+    vector<int> Dijkstra(const int& start);
+    vector<int> BellmanFord(const int& start);
     void disjointSets(int op, int node1, int node2,
                       vector<bool>& sameGroup, vector<int>& root);
 

@@ -154,20 +154,20 @@ void DIJKSTRA_INFO_ARENA()
     ifstream fin("dijkstra.in");
     ofstream fout("dijkstra.out");
     int n, m, x, y, c;
-    fin >> n >> m;
+    cin >> n >> m;
     Graph dg(n);
     for(int i = 1; i <= m; i++)
     {
-        fin >> x >> y>> c;
+        cin >> x >> y>> c;
         dg.setEdge(x, y, c);
     }
 
-    vector<int> ans = dg.Dijkstra();
+    vector<int> ans = dg.Dijkstra(1);
     for(unsigned i = 2; i < ans.size(); i++)
         if(ans[i] != INT_MAX)
-          fout << ans[i]<< " ";
+          cout << ans[i]<< " ";
         else
-          fout << 0 << " ";
+          cout << 0 << " ";
 }
 void BELLMAN_FORD_INFO_ARENA()
 {
@@ -182,14 +182,14 @@ void BELLMAN_FORD_INFO_ARENA()
         ug.setEdge(x, y, c);
     }
 
-    vector<int> ans = ug.BellmanFord();
+    vector<int> ans = ug.BellmanFord(1);
     if(ans[0] == -1)
         fout << "Ciclu negativ!";
     else
     for(unsigned i = 2; i < ans.size(); i++)
         fout << ans[i]<< " ";
 }
-void DISJOINT_SETS_INFO_ARENA()
+ void DISJOINT_SETS_INFO_ARENA()
 {
     ifstream fin("disjoint.in");
     ofstream fout("disjoint.out");
@@ -215,6 +215,6 @@ void DISJOINT_SETS_INFO_ARENA()
 }
 int main()
 {
-   DISJOINT_SETS_INFO_ARENA();
+   DIJKSTRA_INFO_ARENA();
     return 0;
 }

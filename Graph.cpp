@@ -126,29 +126,29 @@ void Graph::printEdges() const
   }
 }
 
-vector<int> Graph::Dijkstra()
+vector<int> Graph::Dijkstra(const int& start)
 {
     vector<int> minCost(this->nrNodes+1, INT_MAX);
-    vector<bool> inMST(this -> nrNodes+1, false);
+    vector<bool> extracted(this -> nrNodes+1, false);
     priority_queue<pair<int, int>,vector<pair<int, int>> ,greater<>>edgePQ;
-    minCost[1] = 0;
-    edgePQ.push(make_pair(0, 1)); //cost has to be first for greater<> to work
+    minCost[start] = 0;
+    edgePQ.push(make_pair(0, start)); //cost has to be first for greater<> to work
 
     while(!edgePQ.empty())
     {
         int node = edgePQ.top().second;
         edgePQ.pop();
 
-        if(inMST[node])
+        if(extracted[node])
             continue;
 
-        inMST[node] = true;
+        extracted[node] = true;
 
         for(auto& it: edges[node])
         {
             int neighbour = it.neighbour;
             int cost = it.cost;
-            if(!inMST[neighbour] && minCost[node] + cost < minCost[neighbour])
+            if(minCost[node] + cost < minCost[neighbour])
             {
                 minCost[neighbour] = minCost[node] + cost;
                 edgePQ.push(make_pair(minCost[neighbour], neighbour));
@@ -158,16 +158,16 @@ vector<int> Graph::Dijkstra()
     return minCost;
 }
 
-vector<int> Graph::BellmanFord()
+vector<int> Graph::BellmanFord(const int& start)
 {
     vector<int> minCost(this->nrNodes+1, INT_MAX);
     queue<int> activeNodes;
     vector<bool> inQueue(this ->nrNodes+1, false);
     vector<int> nodeOptimizations(this->nrNodes+1, 0);
-    minCost[1] = 0;
-    activeNodes.push(1);
-    inQueue[1] = true;
-    nodeOptimizations[1] = 1;
+    minCost[start] = 0;
+    activeNodes.push(start);
+    inQueue[start] = true;
+    nodeOptimizations[start] = 1;
 
     while(!activeNodes.empty())
     {
