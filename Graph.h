@@ -5,7 +5,7 @@
 #include <iostream>
 #include <queue>
 #include <algorithm>
-#include <cfloat>
+
 using namespace std;
 
 struct edge
@@ -28,18 +28,21 @@ public:
     virtual ~Graph() = default;
 
     int nrConnectedComponents();
-    vector<int> minDistanceBFS(int start);
+    vector<int> getDistancesBFS(const int& start);
     vector<int> PrimMST(int& costMST);
     vector<int> Dijkstra(const int& start);
     vector<int> BellmanFord(const int& start);
     void disjointSets(int op, int node1, int node2,
                       vector<bool>& sameGroup, vector<int>& root);
+    int minCost(int node1, int node2);
+    vector<vector<int>> getMinCostMatrix();
+    int getTreeDiameter(const int& start);
 
 private:
     void DFS(int node, vector<int>& visited);
     int findGroup(int node, vector<int>& root); //with path compression
     void unifyGroups(int node1, int node2, vector<int>& root);
-
+    vector<vector<int>> RoyFloyd();
 };
 
 

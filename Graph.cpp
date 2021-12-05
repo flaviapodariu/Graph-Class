@@ -16,7 +16,7 @@ int Graph::getNrNodes() const
 
 void Graph::setEdge(int node, int neighbour, int cost)
 {
-    struct edge tmp;
+    struct edge tmp{};
     tmp.neighbour = neighbour;
     tmp.cost = cost;
     this -> edges[node].push_back(tmp);
@@ -40,7 +40,7 @@ int Graph::nrConnectedComponents()
     return ans;
 }
 
-vector<int> Graph::minDistanceBFS(int start)
+vector<int> Graph::getDistancesBFS(const int& start)
 {
     vector<int>distances(this->nrNodes + 1, -1);
     distances[start] = 0;
@@ -237,6 +237,73 @@ void Graph::unifyGroups(int node1, int node2, vector<int>& root)
     else
         root[root1] = root2;
 }
+
+int Graph::minCost(int node1, int node2)
+{
+    if(this ->edges[node1][node2-1].cost == 0 && node1 != node2)
+        return 0;
+    vector<vector<int>> minCostMatrix = RoyFloyd();
+    return minCostMatrix[node1][node2];
+}
+
+vector<vector<int>> Graph::getMinCostMatrix()
+{
+    return RoyFloyd();
+}
+
+
+vector<vector<int>> Graph::RoyFloyd()
+{
+    int n = this -> nrNodes;
+    vector<vector<int>> dp;
+    dp.resize(n+1);
+    int infinity = INT_MAX / 4; //avoid overflow
+
+    for(int i = 1; i <= n; i++)
+    {   dp[i].resize(n+1);
+        for (int j = 1; j <= n; j++)
+            if (i != j && this->edges[i][j-1].cost == 0)
+                dp[i][j] = infinity;
+            else
+                dp[i][j] = this->edges[i][j-1].cost;
+    }
+
+    for(int k = 1; k <= n; k++)
+        for(int i = 1; i <= n; i++)
+            for(int j = 1; j <= n; j++)
+                if(dp[i][k] + dp[k][j] < dp[i][j])
+                    dp[i][j] = dp[i][k] + dp[k][j];
+
+    return dp;
+}
+
+int Graph::getTreeDiameter(const int &start)
+{
+    int maxDist = -1;
+    int endpoint;
+    vector<int> dist = getDistancesBFS(start);
+
+    for(int i = 1; i <= this -> nrNodes; i++)
+        if(dist[i] > maxDist)
+        {
+            maxDist = dist[i];
+            endpoint = i;
+        }
+
+    dist = getDistancesBFS(endpoint);
+    maxDist = -1;
+
+    for(int i = 1; i <= this -> nrNodes; i++)
+        if(dist[i] > maxDist)
+            maxDist = dist[i];
+
+    return maxDist + 1;
+    // +1 bc the diameter is the max no of nodes on te longest chain in the tree
+   // that is the no of edges + 1
+}
+
+
+
 
 
 

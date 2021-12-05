@@ -34,7 +34,7 @@ void BFS_INFO_ARENA()
         fin >> x >> y;
         dg.addEdge(x, y, 0);
     }
-    vector<int> ans = dg.minDistanceBFS(s);
+    vector<int> ans = dg.getDistancesBFS(s);
     for(int i = 1 ; i <= dg.getNrNodes(); i++)
         fout << ans[i] << " ";
 }
@@ -213,8 +213,48 @@ void BELLMAN_FORD_INFO_ARENA()
         else
             fout << "NU" << "\n";
 }
+
+void ROY_FLOYD_INFO_ARENA()
+{
+    ifstream fin("royfloyd.in");
+    ofstream fout("royfloyd.out");
+    int n, cost;
+    cin >> n;
+    Graph g(n);
+
+    for(int i = 1; i <= n; i++)
+        for(int j = 1; j <= n; j++)
+        {
+            cin >> cost;
+            g.setEdge(i, j, cost);
+            //setEdge will push_back j starting from index 0!
+        }
+    vector<vector<int>> ans = g.getMinCostMatrix();
+    for(int i = 1; i <= n; i++)
+    {
+        for(int j = 1; j <= n; j++)
+            cout << ans[i][j] << " ";
+        cout << "\n";
+    }
+
+}
+void TREE_DIAMETER_INFO_ARENA()
+{
+    ifstream fin("darb.in");
+    ofstream fout("darb.out");
+    int n, x, y;
+    fin >> n;
+    UndirectedGraph ug(n);
+    for(int i = 1; i < n; i++)
+    {
+        fin >> x >> y;
+        ug.addEdge(x, y, 0);
+    }
+    fout <<  ug.Graph::getTreeDiameter(1);
+
+}
 int main()
 {
-   DIJKSTRA_INFO_ARENA();
+    TREE_DIAMETER_INFO_ARENA();
     return 0;
 }
