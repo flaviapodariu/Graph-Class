@@ -14,11 +14,12 @@ int Graph::getNrNodes() const
     return this -> nrNodes;
 }
 
-void Graph::setEdge(int node, int neighbour, int cost)
+void Graph::setEdge(int node, int neighbour, int cost, int capacity)
 {
     struct edge tmp{};
     tmp.neighbour = neighbour;
     tmp.cost = cost;
+    tmp.capacity = capacity;
     this -> edges[node].push_back(tmp);
 }
 
@@ -53,14 +54,14 @@ vector<int> Graph::getDistancesBFS(const int& start)
         int x = toBeVisited.front();
         toBeVisited.pop();
 
-        for(auto &it: this->edges[x])
+        for(auto& it: this->edges[x])
             if(distances[it.neighbour] == -1)
             {
                 distances[it.neighbour] = distances[x] + 1;
                 toBeVisited.push(it.neighbour);
             }
 
-    }     //while loop ended
+    }
 
     return distances;
 }
@@ -300,6 +301,49 @@ int Graph::getTreeDiameter(const int &start)
     return maxDist + 1;
     // +1 bc the diameter is the max no of nodes on te longest chain in the tree
    // that is the no of edges + 1
+}
+
+int Graph::getMinSalesmanCost(const int &start, vector<int>& costs)
+{
+    int n = this -> nrNodes;
+    vector<vector<int>> dp(n);
+    for(int i = 0; i < n; i++)
+    {
+        dp[i].resize(1 << n);
+        for(int j = 0; j < (1 << n); j++)
+            dp[i][j] = INT_MAX;
+    }
+    dp[start][1] = 0;
+
+    for(int mask = 0; mask < (1 << n); mask++)
+    {
+        for(int node = 0; node < n; node++)
+        {
+            if(dp[node][mask] == INT_MAX)
+                continue;
+
+            for(auto& edge: edges[node])
+            {
+                int neighbour = edge.neighbour;
+                int cost = edge.cost;
+
+                if(mask & (1 << neighbour))
+                    continue; // neighbour already on this path
+
+                int new_mask = mask | (1 << neighbour);
+                if(dp[neighbour][new_mask] > dp[node][mask] + cost)
+                    dp[neighbour][new_mask] = dp[node][mask] + cost;
+            }
+        }
+    }
+    int ans = INT_MAX;
+    for(int i = 0; i < n; i++)
+        if(dp[i][(1 << n) - 1] != INT_MAX && costs[i] != -1)
+           ans = min(ans, dp[i][(1 << n) - 1] + costs[i]);
+
+    if(ans == INT_MAX)
+        return -1;
+    return ans;
 }
 
 

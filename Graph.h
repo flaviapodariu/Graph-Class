@@ -13,7 +13,7 @@ struct edge
     int node;
     int neighbour;
     long cost;
-
+    int capacity;
 };
 
 class Graph {
@@ -22,7 +22,7 @@ class Graph {
 public:
     Graph(int _nrNodes);
     int getNrNodes() const;
-    void setEdge(int node, int neighbour, int cost);
+    void setEdge(int node, int neighbour, int cost=0, int capacity=0);
     void printEdges() const;
     const vector<edge>& getNeighbours(int node);
     virtual ~Graph() = default;
@@ -37,6 +37,7 @@ public:
     int minCost(int node1, int node2);
     vector<vector<int>> getMinCostMatrix();
     int getTreeDiameter(const int& start);
+    int getMinSalesmanCost(const int& start, vector<int>& costs);
 
 private:
     void DFS(int node, vector<int>& visited);

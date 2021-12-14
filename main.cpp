@@ -18,7 +18,7 @@ void DFS_INFO_ARENA()
     for(int i = 1; i <= m; i++)
     {
         fin >> x >> y;
-        ug.addEdge(x, y, 0);
+        ug.addEdge(x, y);
     }
     fout << ug.nrConnectedComponents();
 }
@@ -32,7 +32,7 @@ void BFS_INFO_ARENA()
     for(int i = 1; i <= m; i++)
     {
         fin >> x >> y;
-        dg.addEdge(x, y, 0);
+        dg.addEdge(x, y);
     }
     vector<int> ans = dg.getDistancesBFS(s);
     for(int i = 1 ; i <= dg.getNrNodes(); i++)
@@ -48,7 +48,7 @@ void SCC_INFO_ARENA()
     for(int i = 1; i <= m; i++)
     {
         fin >> x >> y;
-        dg.addEdge(x, y, 0);
+        dg.addEdge(x, y);
     }
     vector<vector<int>> scc = dg.getStronglyConnected();
     fout << scc.size()<< "\n";
@@ -70,7 +70,7 @@ void TOPOLOGICAL_SORT_INFO_ARENA()
     for(int i = 1; i <= m; i++)
     {
         fin >> x >> y;
-        dg.addEdge(x, y, 0);
+        dg.addEdge(x, y);
     }
     vector<int> ans = dg.topologicalSorting();
     for(int i = ans.size()-1; i >= 0; i--)
@@ -93,7 +93,7 @@ void TOPOLOGICAL_SORT_INFO_ARENA()
 //    for(int i = 1; i <= m; i++)
 //    {
 //        fin >> x >> y;
-//        ug.addEdge(x, y, 0);
+//        ug.addEdge(x, y);
 //    }
 //    vector<vector<int>> ans = ug.biconnectedComponents();
 //
@@ -110,7 +110,7 @@ vector<vector<int>> CRITICAL_CONN_LEETCODE(int n, vector<vector<int>>& connectio
     UndirectedGraph ug(n);
     int m = connections.size();
     for(int i = 0; i < m ; ++i)
-        ug.addEdge(connections[i][0], connections[i][1], 0);
+        ug.addEdge(connections[i][0], connections[i][1]);
 
     return ug.criticalEdges();
 
@@ -134,15 +134,14 @@ void MIN_SPANNING_TREE_INFO_ARENA()
     ofstream fout("apm.out");
     int n, m, x, y, c;
     cin >> n >> m;
-    Graph ug(n);
+    UndirectedGraph ug(n);
     for(int i = 1; i <= m; i++)
     {
         cin >> x >> y>> c;
-        ug.setEdge(x, y, c);
-        ug.setEdge(y, x, c);
+        ug.addEdge(x, y, c);
     }
     int costMST = 0;
-    vector<int> ans = ug.PrimMST(costMST);
+    vector<int> ans = ug.Graph::PrimMST(costMST);
 
     cout << costMST << "\n";
     cout << n - 1 << "\n";
@@ -175,14 +174,14 @@ void BELLMAN_FORD_INFO_ARENA()
     ofstream fout("bellmanford.out");
     int n, m, x, y, c;
     fin >> n >> m;
-    Graph ug(n);
+    Graph g(n);
     for(int i = 1; i <= m; i++)
     {
         fin >> x >> y>> c;
-        ug.setEdge(x, y, c);
+        g.setEdge(x, y, c);
     }
 
-    vector<int> ans = ug.BellmanFord(1);
+    vector<int> ans = g.BellmanFord(1);
     if(ans[0] == -1)
         fout << "Ciclu negativ!";
     else
@@ -248,13 +247,63 @@ void TREE_DIAMETER_INFO_ARENA()
     for(int i = 1; i < n; i++)
     {
         fin >> x >> y;
-        ug.addEdge(x, y, 0);
+        ug.addEdge(x, y);
     }
     fout <<  ug.Graph::getTreeDiameter(1);
 
 }
+void MAX_FLOW_INFO_ARENA()  //60p
+{
+    ifstream fin("maxflow.in");
+    ofstream fout("maxflow.out");
+    int n, m, x, y, capacity;
+    fin >> n >> m;
+    DirectedGraph dg(n);
+
+    for(int i = 0; i < m; i++)
+    {
+        fin >> x >> y >> capacity;
+        dg.addEdge(x, y, 0, capacity);
+    }
+    vector<vector<int>> cap;
+    cap.resize(n+1);
+
+    for(int i = 1; i <= n; i++)
+    {
+        cap[i].resize(n+1, 0);
+        for(auto& it: dg.getNeighbours(i))
+            cap[i][it.neighbour] = it.capacity;
+    }
+
+    fout << dg.getMaxFlow(1, n, cap);
+
+}
+void TRAVELLING_SALESMAN_INFO_ARENA()
+{
+    ifstream fin("hamilton.in");
+    ofstream fout("hamilton.out");
+    int n, m, x, y, cost;
+    fin >> n >> m;
+    DirectedGraph dg(n);
+    vector<vector<int>> costs(n);
+    for(int i = 0; i < n; i++)
+        costs[i].resize(n, -1);
+
+    for(int i = 0; i < m; i++)
+    {
+        fin >> x >> y >> cost;
+        dg.addEdge(x, y, cost);
+        costs[y][x] = cost;
+    }
+
+   int ans = dg.Graph::getMinSalesmanCost(0, costs[0]); // start, costs[start]
+   if(ans != -1)
+       fout << ans;
+   else
+       fout << "Nu exista solutie";
+}
 int main()
 {
-    TREE_DIAMETER_INFO_ARENA();
+    TRAVELLING_SALESMAN_INFO_ARENA();
     return 0;
 }

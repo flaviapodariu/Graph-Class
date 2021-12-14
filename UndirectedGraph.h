@@ -6,7 +6,7 @@
 class UndirectedGraph: public Graph{
 public:
     UndirectedGraph(int _nrNodes);
-    void addEdge(int node, int neighbour, int cost);
+    void addEdge(int node, int neighbour, int cost=0, int capacity=0);
     ~UndirectedGraph() = default;
 
     vector<vector<int>> biconnectedComponents();

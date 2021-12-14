@@ -2,9 +2,9 @@
 
 DirectedGraph::DirectedGraph(int _nrNodes): Graph(_nrNodes) {}
 
-void DirectedGraph::addEdge(int node, int neighbour, int cost)
+void DirectedGraph::addEdge(int node, int neighbour, int cost, int capacity)
 {
-   this -> setEdge(node, neighbour, cost);
+   this -> setEdge(node, neighbour, cost, capacity);
 }
 
 vector<vector<int>> DirectedGraph::getStronglyConnected()
@@ -97,4 +97,60 @@ void DirectedGraph::topologicalDFS(int node, vector<int>&sorted,
    }
    sorted.push_back(node);
 }
+
+int DirectedGraph::getMaxFlow(const int& start, const int& sink,
+                              vector<vector<int>>& capacities)
+{
+    int maxFlow = 0;
+    vector<int>path;
+    while(int bottleneck = EdmondsKarpBFS(start, sink, path, capacities))
+    {
+        maxFlow += bottleneck;
+        int curr = sink;
+        while(curr != start)
+        {
+            int prev = path[curr];
+            capacities[prev][curr] -= bottleneck;
+            capacities[curr][prev] += bottleneck; //back arch for augmented paths
+            curr = prev;
+        }
+
+    }
+    return maxFlow;
+}
+
+int DirectedGraph::EdmondsKarpBFS(const int &start, const int &sink,
+                                  vector<int>& path, vector<vector<int>>& capacities)
+{
+
+    queue<pair<int, int>> toBeVisited;
+    toBeVisited.push({start, INT_MAX}); //edge to start does not exist
+    path.clear(); //starting fresh new path
+    path.resize(getNrNodes()+1, -1);
+
+    while(!toBeVisited.empty())
+    {
+        int node = toBeVisited.front().first;
+        int capacity = toBeVisited.front().second;
+        toBeVisited.pop();
+
+        for(auto& next: getNeighbours(node))
+        {
+            int cpc = capacities[node][next.neighbour];
+            if(cpc && path[next.neighbour] == -1)
+            {
+                path[next.neighbour] = node;
+                int bottleneck = min(capacity, cpc);
+                if(next.neighbour == sink)
+                    return bottleneck;
+                toBeVisited.push({next.neighbour, bottleneck});
+
+            }
+        }
+    }
+
+    return 0;
+}
+
+
 

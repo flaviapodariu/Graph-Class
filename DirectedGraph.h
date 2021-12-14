@@ -6,14 +6,15 @@
 class DirectedGraph: public Graph {
 public:
     DirectedGraph(int _nrNodes);
-    void addEdge(int node, int neighbour, int cost);
+    void addEdge(int node, int neighbour, int cost=0, int capacity=0);
     ~DirectedGraph() = default;
 
     vector<vector<int>> getStronglyConnected();
     vector<int> topologicalSorting();
+    int getMaxFlow(const int& start, const int& sink,
+                   vector<vector<int>>& capacities);
 
 private:
-
     void TarjanDFS(int start, int& counterID,
                           stack<int>& nodeStack, vector<bool>& onStack,
                           vector<vector<int>>& scc,
@@ -21,6 +22,8 @@ private:
 
     void topologicalDFS(int node, vector<int>& sorted,
                         vector<bool>& visited);
+    int EdmondsKarpBFS(const int& start, const int& sink, vector<int>& path,
+                       vector<vector<int>>& capacities);
 
 };
 
