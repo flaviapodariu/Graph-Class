@@ -34,9 +34,9 @@ const vector<edge>& Graph::getNeighbours(int node)
 int Graph::nrConnectedComponents()
 {
     int ans = 0;
-    vector<int> visited(this -> nrNodes+1, 0);
+    vector<bool> visited(this -> nrNodes+1, false);
     for(int i = 1 ; i <= this -> nrNodes; i++)
-        if(visited[i] == 0)
+        if(!visited[i])
         {
             DFS(i, visited);
             ++ans;
@@ -68,6 +68,14 @@ vector<int> Graph::getDistancesBFS(const int& start)
     }
 
     return distances;
+}
+
+vector<bool> Graph::DFS(const int &start)
+{
+    vector<bool> visited(this->nrNodes + 1, false);
+    DFS(start, visited);
+
+    return visited;
 }
 
 
@@ -108,15 +116,15 @@ vector<int> Graph::PrimMST(int& costMST)
 }
 
 
-void Graph::DFS(int start, vector<int>& visited)
+void Graph::DFS(int start, vector<bool>& visited)
 {
-    visited[start] = 1;
+    visited[start] = true;
     for(auto &it: this ->edges[start])
     {
         int neighbour = it.neighbour;
-        if(visited[neighbour] == 0)
+        if(!visited[neighbour])
         {
-            visited[neighbour] = 1;
+            visited[neighbour] = true;
             DFS(neighbour, visited);
         }
     }
@@ -346,6 +354,8 @@ int Graph::getMinSalesmanCost(const int &start, vector<int>& costs)
         return -1;
     return ans;
 }
+
+
 
 
 

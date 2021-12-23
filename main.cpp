@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <queue>
 #include "Graph.h"
 #include <sys/resource.h> // posix header
 #include "DirectedGraph.h"
@@ -136,15 +135,19 @@ vector<vector<int>> CRITICAL_CONN_LEETCODE(int n, vector<vector<int>>& connectio
 void HAVEL_HAKIMI()
 {
     int n, d;
-    fin >> n;
+    cout << "Insert the number of nodes: ";
+    cin >> n;
+    cout << "\n";
+    cout << "Insert the degree of each node: ";
     UndirectedGraph ug(n);
     vector<int>degrees;
     for(int i = 0; i < ug.getNrNodes(); i++)
     {
-        fin >> d;
+        cin >> d;
         degrees.push_back(d);
     }
-    fout << ug.havelHakimi(degrees);
+    cout << "\n";
+    cout << ug.havelHakimi(degrees);
 }
 
 
@@ -344,6 +347,6 @@ void TRAVELLING_SALESMAN_INFO_ARENA()
 }
 int main()
 {
-    TRAVELLING_SALESMAN_INFO_ARENA();
+    // Run a problem solver or make one yourself
     return 0;
 }

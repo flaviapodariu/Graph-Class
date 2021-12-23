@@ -28,8 +28,9 @@ public:
     virtual ~Graph() = default;
 
     int nrConnectedComponents();
-    void DFS(int node, vector<int>& visited); //helper for nrConnectedComponents
+
     vector<int> getDistancesBFS(const int& start);
+    vector<bool> DFS(const int& start);
     vector<int> PrimMST(int& costMST);
     vector<int> Dijkstra(const int& start = 0);
     vector<int> BellmanFord(const int& start = 0);
@@ -40,6 +41,7 @@ public:
     int getMinSalesmanCost(const int& start, vector<int>& costs);
 
 private:
+    void DFS(int node, vector<bool>& visited); //helper for nrConnectedComponents
     static int findGroup(int node, vector<int>& root); //with path compression
     static void unifyGroups(int node1, int node2, vector<int>& root);
 };
