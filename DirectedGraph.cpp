@@ -2,10 +2,12 @@
 
 DirectedGraph::DirectedGraph(int _nrNodes): Graph(_nrNodes) {}
 
+
 void DirectedGraph::addEdge(int node, int neighbour, int cost, int capacity)
 {
    this -> setEdge(node, neighbour, cost, capacity);
 }
+
 
 vector<vector<int>> DirectedGraph::getStronglyConnected()
 { // initializing everything we need for the Tarjan algorithm
@@ -28,6 +30,7 @@ vector<vector<int>> DirectedGraph::getStronglyConnected()
 
     return scc;
 }
+
 
 void DirectedGraph::TarjanDFS(int node, int& counterID,
                               stack<int>& nodeStack,
@@ -70,6 +73,7 @@ void DirectedGraph::TarjanDFS(int node, int& counterID,
     }
 }
 
+
 vector<int> DirectedGraph::topologicalSorting()
 {
     vector<int> sorted;
@@ -84,6 +88,7 @@ vector<int> DirectedGraph::topologicalSorting()
     return sorted;
 }
 
+
 void DirectedGraph::topologicalDFS(int node, vector<int>&sorted,
                                    vector<bool>&visited)
 {
@@ -97,6 +102,7 @@ void DirectedGraph::topologicalDFS(int node, vector<int>&sorted,
    }
    sorted.push_back(node);
 }
+
 
 int DirectedGraph::getMaxFlow(const int& start, const int& sink,
                               vector<vector<int>>& capacities)
@@ -118,6 +124,7 @@ int DirectedGraph::getMaxFlow(const int& start, const int& sink,
     }
     return maxFlow;
 }
+
 
 int DirectedGraph::EdmondsKarpBFS(const int &start, const int &sink,
                                   vector<int>& path, vector<vector<int>>& capacities)

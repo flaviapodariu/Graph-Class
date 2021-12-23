@@ -3,7 +3,7 @@
 #include <vector>
 #include <queue>
 #include "Graph.h"
-//#include <sys/resource.h>
+#include <sys/resource.h> // posix header
 #include "DirectedGraph.h"
 #include "UndirectedGraph.h"
 using namespace std;
@@ -22,6 +22,9 @@ void DFS_INFO_ARENA()
     }
     fout << ug.nrConnectedComponents();
 }
+
+
+
 void BFS_INFO_ARENA()
 {
     ifstream fin("bfs.in");
@@ -38,6 +41,9 @@ void BFS_INFO_ARENA()
     for(int i = 1 ; i <= dg.getNrNodes(); i++)
         fout << ans[i] << " ";
 }
+
+
+
 void SCC_INFO_ARENA()
 {
     ifstream fin("ctc.in");
@@ -60,6 +66,9 @@ void SCC_INFO_ARENA()
         fout << "\n";
     }
 }
+
+
+
 void TOPOLOGICAL_SORT_INFO_ARENA()
 {
     ifstream fin("sortaret.in");
@@ -77,34 +86,40 @@ void TOPOLOGICAL_SORT_INFO_ARENA()
         fout << ans.at(i)<< " ";
 
 }
-//void BCC_INFO_ARENA()
-//{
-//    const rlim_t new_stackSize = 20000000;
-//    struct rlimit limit;
-//    getrlimit(RLIMIT_STACK, &limit);
-//    limit.rlim_cur = new_stackSize;
-//    setrlimit(RLIMIT_STACK, &limit);
-//
-//    ifstream fin("biconex.in");
-//    ofstream fout("biconex.out");
-//    int n, m, x, y;
-//    fin >> n >> m;
-//    UndirectedGraph ug(n);
-//    for(int i = 1; i <= m; i++)
-//    {
-//        fin >> x >> y;
-//        ug.addEdge(x, y);
-//    }
-//    vector<vector<int>> ans = ug.biconnectedComponents();
-//
-//    fout << ans.size()<< " ";
-//    for(auto &comp: ans)
-//    {
-//        for(auto &elem: comp)
-//            fout << elem << " ";
-//        fout << "\n";
-//    }
-//}
+
+
+
+void BCC_INFO_ARENA()
+{
+    const rlim_t new_stackSize = 20000000;
+    struct rlimit limit;
+    getrlimit(RLIMIT_STACK, &limit);
+    limit.rlim_cur = new_stackSize;
+    setrlimit(RLIMIT_STACK, &limit);
+
+    ifstream fin("biconex.in");
+    ofstream fout("biconex.out");
+    int n, m, x, y;
+    fin >> n >> m;
+    UndirectedGraph ug(n);
+    for(int i = 1; i <= m; i++)
+    {
+        fin >> x >> y;
+        ug.addEdge(x, y);
+    }
+    vector<vector<int>> ans = ug.biconnectedComponents();
+
+    fout << ans.size()<< " ";
+    for(auto &comp: ans)
+    {
+        for(auto &elem: comp)
+            fout << elem << " ";
+        fout << "\n";
+    }
+}
+
+
+
 vector<vector<int>> CRITICAL_CONN_LEETCODE(int n, vector<vector<int>>& connections)
 {
     UndirectedGraph ug(n);
@@ -115,59 +130,71 @@ vector<vector<int>> CRITICAL_CONN_LEETCODE(int n, vector<vector<int>>& connectio
     return ug.criticalEdges();
 
 }
+
+
+
 void HAVEL_HAKIMI()
 {
     int n, d;
-    cin >> n;
+    fin >> n;
     UndirectedGraph ug(n);
     vector<int>degrees;
     for(int i = 0; i < ug.getNrNodes(); i++)
     {
-        cin >> d;
+        fin >> d;
         degrees.push_back(d);
     }
-    cout << ug.havelHakimi(degrees);
+    fout << ug.havelHakimi(degrees);
 }
+
+
+
 void MIN_SPANNING_TREE_INFO_ARENA()
 {
     ifstream fin("apm.in");
     ofstream fout("apm.out");
     int n, m, x, y, c;
-    cin >> n >> m;
+    fin >> n >> m;
     UndirectedGraph ug(n);
     for(int i = 1; i <= m; i++)
     {
-        cin >> x >> y>> c;
+        fin >> x >> y>> c;
         ug.addEdge(x, y, c);
     }
     int costMST = 0;
     vector<int> ans = ug.Graph::PrimMST(costMST);
 
-    cout << costMST << "\n";
-    cout << n - 1 << "\n";
+    fout << costMST << "\n";
+    fout << n - 1 << "\n";
     for(int i = 2; i < ans.size(); i++)
-        cout<< ans[i] << " "<< i << "\n";
+        fout<< ans[i] << " "<< i << "\n";
 }
+
+
+
 void DIJKSTRA_INFO_ARENA()
 {
     ifstream fin("dijkstra.in");
     ofstream fout("dijkstra.out");
     int n, m, x, y, c;
-    cin >> n >> m;
+    fin >> n >> m;
     Graph dg(n);
     for(int i = 1; i <= m; i++)
     {
-        cin >> x >> y>> c;
+        fin >> x >> y>> c;
         dg.setEdge(x, y, c);
     }
 
     vector<int> ans = dg.Dijkstra(1);
     for(unsigned i = 2; i < ans.size(); i++)
         if(ans[i] != INT_MAX)
-          cout << ans[i]<< " ";
+          fout << ans[i]<< " ";
         else
-          cout << 0 << " ";
+          fout << 0 << " ";
 }
+
+
+
 void BELLMAN_FORD_INFO_ARENA()
 {
     ifstream fin("bellmanford.in");
@@ -188,13 +215,15 @@ void BELLMAN_FORD_INFO_ARENA()
     for(unsigned i = 2; i < ans.size(); i++)
         fout << ans[i]<< " ";
 }
+
+
+
  void DISJOINT_SETS_INFO_ARENA()
 {
     ifstream fin("disjoint.in");
     ofstream fout("disjoint.out");
     int n, m, x, y, op;
     fin >> n >> m;
-    Graph dg(n);
     vector<bool> sameGroup;
     vector<int> root(n+1);
 
@@ -204,7 +233,7 @@ void BELLMAN_FORD_INFO_ARENA()
     for(int i = 1; i <= m; i++)
     {
         fin >> op >>x >> y;
-        dg.disjointSets(op, x, y, sameGroup, root);
+        Graph::disjointSets(op, x, y, sameGroup, root);
     }
     for(int i = 0; i < sameGroup.size(); i++)
         if(sameGroup[i])
@@ -213,18 +242,20 @@ void BELLMAN_FORD_INFO_ARENA()
             fout << "NU" << "\n";
 }
 
+
+
 void ROY_FLOYD_INFO_ARENA()
 {
     ifstream fin("royfloyd.in");
     ofstream fout("royfloyd.out");
     int n, cost;
-    cin >> n;
+    fin >> n;
     Graph g(n);
 
     for(int i = 1; i <= n; i++)
         for(int j = 1; j <= n; j++)
         {
-            cin >> cost;
+            fin >> cost;
             g.setEdge(i, j, cost);
             //setEdge will push_back j starting from index 0!
         }
@@ -232,11 +263,14 @@ void ROY_FLOYD_INFO_ARENA()
     for(int i = 1; i <= n; i++)
     {
         for(int j = 1; j <= n; j++)
-            cout << ans[i][j] << " ";
-        cout << "\n";
+            fout << ans[i][j] << " ";
+        fout << "\n";
     }
 
 }
+
+
+
 void TREE_DIAMETER_INFO_ARENA()
 {
     ifstream fin("darb.in");
@@ -252,6 +286,9 @@ void TREE_DIAMETER_INFO_ARENA()
     fout <<  ug.Graph::getTreeDiameter(1);
 
 }
+
+
+
 void MAX_FLOW_INFO_ARENA()  //60p
 {
     ifstream fin("maxflow.in");
@@ -278,6 +315,9 @@ void MAX_FLOW_INFO_ARENA()  //60p
     fout << dg.getMaxFlow(1, n, cap);
 
 }
+
+
+
 void TRAVELLING_SALESMAN_INFO_ARENA()
 {
     ifstream fin("hamilton.in");

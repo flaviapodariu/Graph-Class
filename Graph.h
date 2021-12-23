@@ -28,22 +28,20 @@ public:
     virtual ~Graph() = default;
 
     int nrConnectedComponents();
+    void DFS(int node, vector<int>& visited); //helper for nrConnectedComponents
     vector<int> getDistancesBFS(const int& start);
     vector<int> PrimMST(int& costMST);
-    vector<int> Dijkstra(const int& start);
-    vector<int> BellmanFord(const int& start);
-    void disjointSets(int op, int node1, int node2,
+    vector<int> Dijkstra(const int& start = 0);
+    vector<int> BellmanFord(const int& start = 0);
+    static void disjointSets(int op, int node1, int node2,
                       vector<bool>& sameGroup, vector<int>& root);
-    int minCost(int node1, int node2);
     vector<vector<int>> getMinCostMatrix();
     int getTreeDiameter(const int& start);
     int getMinSalesmanCost(const int& start, vector<int>& costs);
 
 private:
-    void DFS(int node, vector<int>& visited);
-    int findGroup(int node, vector<int>& root); //with path compression
-    void unifyGroups(int node1, int node2, vector<int>& root);
-    vector<vector<int>> RoyFloyd();
+    static int findGroup(int node, vector<int>& root); //with path compression
+    static void unifyGroups(int node1, int node2, vector<int>& root);
 };
 
 

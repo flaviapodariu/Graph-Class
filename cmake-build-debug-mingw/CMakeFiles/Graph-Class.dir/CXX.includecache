@@ -1,0 +1,58 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/DirectedGraph.cpp
+DirectedGraph.h
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/DirectedGraph.h
+
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/DirectedGraph.h
+Graph.h
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/Graph.h
+
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/Graph.cpp
+Graph.h
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/Graph.h
+
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/Graph.h
+vector
+-
+stack
+-
+iostream
+-
+queue
+-
+algorithm
+-
+
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/UndirectedGraph.cpp
+UndirectedGraph.h
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/UndirectedGraph.h
+
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/UndirectedGraph.h
+Graph.h
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/Graph.h
+
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/main.cpp
+iostream
+-
+fstream
+-
+vector
+-
+queue
+-
+Graph.h
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/Graph.h
+sys/resource.h
+-
+DirectedGraph.h
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/DirectedGraph.h
+UndirectedGraph.h
+C:/Users/Flavia/Desktop/FMI/Anul 2/Algo fundamentali/Graph-Class/UndirectedGraph.h
+

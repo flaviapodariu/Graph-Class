@@ -9,6 +9,7 @@ Graph::Graph(int _nrNodes)
      */
 }
 
+
 int Graph::getNrNodes() const
 {
     return this -> nrNodes;
@@ -23,10 +24,12 @@ void Graph::setEdge(int node, int neighbour, int cost, int capacity)
     this -> edges[node].push_back(tmp);
 }
 
+
 const vector<edge>& Graph::getNeighbours(int node)
 {
     return this -> edges[node];
 }
+
 
 int Graph::nrConnectedComponents()
 {
@@ -40,6 +43,7 @@ int Graph::nrConnectedComponents()
         }
     return ans;
 }
+
 
 vector<int> Graph::getDistancesBFS(const int& start)
 {
@@ -65,6 +69,7 @@ vector<int> Graph::getDistancesBFS(const int& start)
 
     return distances;
 }
+
 
 vector<int> Graph::PrimMST(int& costMST)
 {
@@ -102,6 +107,7 @@ vector<int> Graph::PrimMST(int& costMST)
     return parent;
 }
 
+
 void Graph::DFS(int start, vector<int>& visited)
 {
     visited[start] = 1;
@@ -116,6 +122,7 @@ void Graph::DFS(int start, vector<int>& visited)
     }
 }
 
+
 void Graph::printEdges() const
 {
   for(int i = 1; i <= this->getNrNodes(); i++)
@@ -126,6 +133,7 @@ void Graph::printEdges() const
       cout << "\n";
   }
 }
+
 
 vector<int> Graph::Dijkstra(const int& start)
 {
@@ -158,6 +166,7 @@ vector<int> Graph::Dijkstra(const int& start)
     }
     return minCost;
 }
+
 
 vector<int> Graph::BellmanFord(const int& start)
 {
@@ -199,6 +208,7 @@ vector<int> Graph::BellmanFord(const int& start)
     return minCost;
 }
 
+
 void Graph::disjointSets(int op, int node1, int node2,
                          vector<bool>& sameGroup, vector<int>& root)
 {
@@ -213,6 +223,7 @@ void Graph::disjointSets(int op, int node1, int node2,
 
 
 }
+
 
 int Graph::findGroup(int node, vector<int>& root)
 {
@@ -229,6 +240,7 @@ int Graph::findGroup(int node, vector<int>& root)
     return temp;
 }
 
+
 void Graph::unifyGroups(int node1, int node2, vector<int>& root)
 {
     int root1 = findGroup(node1, root);
@@ -239,21 +251,8 @@ void Graph::unifyGroups(int node1, int node2, vector<int>& root)
         root[root1] = root2;
 }
 
-int Graph::minCost(int node1, int node2)
-{
-    if(this ->edges[node1][node2-1].cost == 0 && node1 != node2)
-        return 0;
-    vector<vector<int>> minCostMatrix = RoyFloyd();
-    return minCostMatrix[node1][node2];
-}
 
 vector<vector<int>> Graph::getMinCostMatrix()
-{
-    return RoyFloyd();
-}
-
-
-vector<vector<int>> Graph::RoyFloyd()
 {
     int n = this -> nrNodes;
     vector<vector<int>> dp;
@@ -277,6 +276,7 @@ vector<vector<int>> Graph::RoyFloyd()
 
     return dp;
 }
+
 
 int Graph::getTreeDiameter(const int &start)
 {
@@ -302,6 +302,7 @@ int Graph::getTreeDiameter(const int &start)
     // +1 bc the diameter is the max no of nodes on te longest chain in the tree
    // that is the no of edges + 1
 }
+
 
 int Graph::getMinSalesmanCost(const int &start, vector<int>& costs)
 {

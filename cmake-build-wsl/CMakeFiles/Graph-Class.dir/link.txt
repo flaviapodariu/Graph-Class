@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/Graph-Class.dir/main.cpp.o CMakeFiles/Graph-Class.dir/Graph.cpp.o CMakeFiles/Graph-Class.dir/DirectedGraph.cpp.o CMakeFiles/Graph-Class.dir/UndirectedGraph.cpp.o -o Graph-Class 
