@@ -1,1 +1,0 @@
-WSL not found at: C:\Users\Flavia\AppData\Local\Microsoft\WindowsApps\ubuntu.exe Configure Disable profile
